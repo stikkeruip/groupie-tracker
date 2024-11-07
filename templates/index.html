@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groupie Tracker</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body and Container Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styling */
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        /* Search Bar Styling */
+        .search-bar {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto 30px;
+        }
+
+        .search-bar input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Cards Grid */
+        .artist-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        /* Artist Card Styling */
+        .artist-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            width: 250px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .artist-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .artist-name {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .artist-image {
+            width: 100%;
+            height: 0;
+            padding-top: 100%;
+            background-color: #eee;
+            background-size: cover;
+            background-position: center;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .artist-info {
+            text-align: center;
+        }
+
+        .artist-info p {
+            margin-bottom: 5px;
+        }
+
+        /* Pagination Styling */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            color: #333;
+            padding: 10px 15px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .pagination a:hover {
+            background-color: #ddd;
+        }
+
+        /* Responsive Layout */
+        @media (max-width: 768px) {
+            .artist-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .artist-card {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Header with Title -->
+        <header>
+            <h1>Groupie Tracker</h1>
+        </header>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" placeholder="Search artists...">
+        </div>
+
+        <!-- Artist Cards Grid -->
+        <div class="artist-grid">
+            <!-- Artist Card Template -->
+            <div class="artist-card">
+                <div class="artist-name">Artist Name</div>
+                <div class="artist-image" style="background-image: url('placeholder.jpg');"></div>
+                <div class="artist-info">
+                    <p>Year Established: <strong>Year</strong></p>
+                    <p>First Album: <strong>Date</strong></p>
+                    <p>Members: <strong>Count</strong></p>
+                </div>
+            </div>
+
+            <!-- Add more artist cards here as needed... -->
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <a href="#">&laquo;</a>
+            <a href="#">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">4</a>
+            <a href="#">5</a>
+            <a href="#">&raquo;</a>
+        </div>
+    </div>
+
+</body>
+
+</html>
