@@ -36,8 +36,12 @@
                             </div>
                         </div>
                         <div class="card-members">
-                            <p><strong>Members</strong></p>
-                            <p>{{ .Members }}</p>
+                            <h3 class="category-title">Members</h3>
+                            {{ range .Members }}
+                            <ul>
+                                <li>{{ . }}</li>
+                            </ul>
+                            {{ end }}
                             <!-- Add more details as needed for the backside -->
                         </div>
                     </div>
@@ -45,7 +49,7 @@
             {{ end }}
         </div>
     </div>
-        
+    <footer>A Zone01 Project by Uipko, Giannis, Arsen - © All Rights Reserved</footer>
 </body>
 <script>
     function handleCardClick(artistName) {
