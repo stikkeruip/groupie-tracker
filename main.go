@@ -1,34 +1,41 @@
 package main
 
 import (
-	"fmt"
 	"groupie-tracker/data"
+	"html/template"
+	"log"
+	"net/http"
+	"path/filepath"
 )
 
-func main() {
+// Load the templates
+var templates = template.Must(template.ParseFiles(filepath.Join("templates", "index.html")))
+
+// Render the homepage with artist data
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	// Fetch all data
 	indexes, err := data.FetchAllData()
 	if err != nil {
-		fmt.Println("Error fetching data:", err)
+		http.Error(w, "Failed to fetch artist data", http.StatusInternalServerError)
 		return
 	}
 
-	// Access Artists
-	for _, artist := range indexes.Artists {
-		fmt.Printf("Artist ID: %d, Name: %s, Creation Date: %d, First Album: %s, Members: %v\n", artist.ID, artist.Name, artist.CreationDate, artist.FirstAlbum, artist.Members)
+	// Render template with fetched data
+	err = templates.ExecuteTemplate(w, "index.html", indexes)
+	if err != nil {
+		http.Error(w, "Failed to render template", http.StatusInternalServerError)
 	}
+}
 
-	// Access Locations
-	for _, location := range indexes.Locations {
-		fmt.Printf("Location ID: %d, Locations: %v\n", location.ID, location.Locations)
-	}
+func main() {
+	// Serve static files (images, CSS)
+	fs := http.FileServer(http.Dir("static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	// Access Dates
-	for _, date := range indexes.Dates {
-		fmt.Printf("Date ID: %d, Dates: %v\n", date.ID, date.Dates)
-	}
+	// Set up the main handler
+	http.HandleFunc("/", indexHandler)
 
-	// Access Relations
-	for _, relation := range indexes.Relations {
-		fmt.Printf("Relation ID: %d, DatesLocations: %v\n", relation.ID, relation.DatesLocations)
-	}
+	// Start the server
+	log.Println("Starting server on :8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }

@@ -150,37 +150,23 @@
 
         <!-- Search Bar -->
         <div class="search-bar">
-            <input type="text" placeholder="Search artists...">
+            <input type="text" id="searchInput" placeholder="Search for artists..." onkeyup="searchArtists()">
         </div>
 
         <!-- Artist Cards Grid -->
         <div class="artist-grid">
-            <!-- Artist Card Template -->
+        {{ range .Artists }}
             <div class="artist-card">
-                <div class="artist-name">Artist Name</div>
-                <div class="artist-image" style="background-image: url('placeholder.jpg');"></div>
-                <div class="artist-info">
-                    <p>Year Established: <strong>Year</strong></p>
-                    <p>First Album: <strong>Date</strong></p>
-                    <p>Members: <strong>Count</strong></p>
-                </div>
-            </div>
-
-            <!-- Add more artist cards here as needed... -->
-        </div>
-
-        <!-- Pagination -->
-        <div class="pagination">
-            <a href="#">&laquo;</a>
-            <a href="#">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
-            <a href="#">4</a>
-            <a href="#">5</a>
-            <a href="#">&raquo;</a>
+            <div class="artist-name">{{ .Name }}</div>
+            <div class="artist-image" style="background-image: url('{{ .Image }}');"></div>
+            <div class="artist-info">
+            <p>Year Established: <strong>{{ .CreationDate }}</strong></p>
+            <p>First Album: <strong>{{ .FirstAlbum }}</strong></p>
+            <p>Members: <strong>{{ len .Members }}</strong></p>
         </div>
     </div>
-
+        {{ end }}
 </body>
 
 </html>
+
