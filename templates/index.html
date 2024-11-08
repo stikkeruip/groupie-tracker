@@ -36,15 +36,17 @@
                             </div>
                         </div>
                         <div class="card-members">
-                            <p><strong>Members</strong></p>
-                            <p>{{ .Members }}</p>
-                            <!-- Add more details as needed for the backside -->
+                            <p class="card-category-title">Members</p>
+                            <ul>
+                                {{ range .Members }}
+                                <li>{{ . }}</li>
+                                {{ end }}
+                            </ul>
                         </div>
                     </div>
                 </div>
             {{ end }}
         </div>
-    </div>
         
 </body>
 <script>

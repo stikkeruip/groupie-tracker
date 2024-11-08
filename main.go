@@ -2,6 +2,7 @@ package main
 
 import (
 	"groupie-tracker/data"
+	"groupie-tracker/server/models"
 	"html/template"
 	"log"
 	"net/http"
@@ -13,15 +14,20 @@ var templates = template.Must(template.ParseFiles(filepath.Join("templates", "in
 
 // Render the homepage with artist data
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	// Fetch all data
-	indexes, err := data.FetchAllData()
+	// Fetch the artists slice from the API
+	artists, err := data.FetchInitialData()
 	if err != nil {
 		http.Error(w, "Failed to fetch artist data", http.StatusInternalServerError)
 		return
 	}
 
-	// Render template with fetched data
-	err = templates.ExecuteTemplate(w, "index.html", indexes)
+	// Wrap artists slice in PageData struct
+	data := models.PageData{
+		Artists: artists,
+	}
+
+	// Render template with wrapped data
+	err = templates.ExecuteTemplate(w, "index.html", data)
 	if err != nil {
 		http.Error(w, "Failed to render template", http.StatusInternalServerError)
 	}

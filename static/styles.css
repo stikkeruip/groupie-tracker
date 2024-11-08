@@ -73,6 +73,20 @@ ul {
 .card-members {
     background-color: lightgray;
     transform: rotateY(180deg);
+    overflow-y: scroll;
+    justify-content: flex;
+}
+
+ul {
+    list-style-type: none;
+    text-align: center;
+}
+
+.card-category-title {
+    font-size: 20px;
+    font-weight:bold;
+    margin-bottom: 4px;
+    margin-top: 4px;
 }
 
 .artist-name {
