@@ -123,6 +123,7 @@ h1 {
     background-color: lightblue;
     transform: rotateY(0deg);
     justify-content: flex-start;
+    overflow-y: scroll;
 }
 
 /* Additional Styling for Card Content */
