@@ -46,6 +46,15 @@
                     </div>
                     <div class="card-locations">
                         <h3 class="category-title">Locations</h3>
+                        <ul>
+                            {{ range $index, $location := $.Locations }}
+                            {{ if eq $location.ID .ID }}
+                            {{ range $location.Locations }}
+                            <li>{{ . }}</li>
+                            {{ end }}
+                            {{ end }}
+                            {{ end }}
+                        </ul>
                     </div>
                 </div>
             </div>
