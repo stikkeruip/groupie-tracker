@@ -24,38 +24,42 @@
         <!-- Artist Cards Grid -->
         <div class="artist-grid">
             {{ range .Artists }}
-                <div class="artist-card" onclick="flipCard(this)">
-                    <div class="card-inner">
-                        <div class="card-front">
-                            <div class="artist-name">{{ .Name }}</div>
-                            <div class="artist-image" style="background-image: url('{{ .Image }}');"></div>
-                            <div class="artist-info">
-                                <p>Year Established: <strong>{{ .CreationDate }}</strong></p>
-                                <p>First Album: <strong>{{ .FirstAlbum }}</strong></p>
-                                <p>Members: <strong>{{ len .Members }}</strong></p>
-                            </div>
-                        </div>
-                        <div class="card-members">
-                            <p><strong>Members</strong></p>
-                            <p>{{ .Members }}</p>
-                            <!-- Add more details as needed for the backside -->
-                        </div>
-                        <div class="card-locations">
-                            <p>Locations</p>
+            <div class="artist-card" onclick="flipCard(this)">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <div class="artist-name">{{ .Name }}</div>
+                        <div class="artist-image" style="background-image: url('{{ .Image }}');"></div>
+                        <div class="artist-info">
+                            <p>Year Established: <strong>{{ .CreationDate }}</strong></p>
+                            <p>First Album: <strong>{{ .FirstAlbum }}</strong></p>
+                            <p>Members: <strong>{{ len .Members }}</strong></p>
                         </div>
                     </div>
+                    <div class="card-members">
+                        <h3 class="category-title">Members</h3>
+                        {{ range .Members }}
+                        <ul>
+                            <li>{{ . }}</li>
+                        </ul>
+                        {{ end }}
+                        <!-- Add more details as needed for the backside -->
+                    </div>
+                    <div class="card-locations">
+                        <h3 class="category-title">Locations</h3>
+                    </div>
                 </div>
+            </div>
             {{ end }}
         </div>
     </div>
-        
+    <footer>A Zone01 Project by Uipko, Giannis, Arsen - © All Rights Reserved</footer>
 </body>
 <script>
     function handleCardClick(artistName) {
         console.log("Clicked on artist:", artistName);
         // Add your custom logic here, like navigating or displaying additional info
     }
-    </script>
+</script>
 <script>
     const cardStates = [];
 
@@ -90,11 +94,10 @@
             cardInner.style.transform = "rotateY(180deg)"; // Show back 1 (Members)
             members.style.opacity = "1";
         } else {
-            cardInner.style.transform = "rotateY(270deg)"; // Show back 2 (Locations)
+            cardInner.style.transform = "rotateY(360deg)"; // Show back 2 (Locations)
             locations.style.opacity = "1";
         }
     }
 </script>
 
 </html>
-
