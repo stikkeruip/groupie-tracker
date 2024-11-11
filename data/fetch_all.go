@@ -6,7 +6,7 @@ import (
 	"groupie-tracker/utils"
 )
 
-func FetchInitialData() ([]models.Artist, error) {
+func FetchInitialData() (*models.PageData, error) {
 	var artists []models.Artist
 
 	// Fetch Artists
@@ -15,7 +15,12 @@ func FetchInitialData() ([]models.Artist, error) {
 		return nil, err
 	}
 
-	return artists, nil
+	// Create page data structure
+	pageData := &models.PageData{
+		Artists: artists,
+	}
+
+	return pageData, nil
 }
 
 func FetchLocationsSlice(artistID int) ([]string, error) {
