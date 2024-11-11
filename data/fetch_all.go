@@ -1,36 +1,34 @@
 package data
 
 import (
+	"fmt"
 	"groupie-tracker/server/models"
 	"groupie-tracker/utils"
 )
 
-func FetchAllData() (models.Indexes, error) {
-	var indexes models.Indexes
+func FetchInitialData() ([]models.Artist, error) {
+	var artists []models.Artist
 
 	// Fetch Artists
 	artistsURL := "https://groupietrackers.herokuapp.com/api/artists"
-	if err := utils.FetchData(artistsURL, &indexes.Artists); err != nil {
-		return indexes, err
+	if err := utils.FetchData(artistsURL, &artists); err != nil {
+		return nil, err
 	}
 
-	// Fetch Locations
-	locationsURL := "https://groupietrackers.herokuapp.com/api/locations"
-	if err := utils.FetchData(locationsURL, &indexes.Locations); err != nil {
-		return indexes, err
+	return artists, nil
+}
+
+func FetchLocationsSlice(artistID int) ([]string, error) {
+	// Construct the URL with the artist's ID
+	locationsURL := fmt.Sprintf("https://groupietrackers.herokuapp.com/api/locations/%d", artistID)
+
+	// Create a variable to hold the response
+	var locResp models.Locations
+
+	// Use FetchData to get and decode the data
+	if err := utils.FetchData(locationsURL, &locResp); err != nil {
+		return nil, err
 	}
 
-	// Fetch Dates
-	datesURL := "https://groupietrackers.herokuapp.com/api/dates"
-	if err := utils.FetchData(datesURL, &indexes.Dates); err != nil {
-		return indexes, err
-	}
-
-	// Fetch Relations
-	relationsURL := "https://groupietrackers.herokuapp.com/api/relation"
-	if err := utils.FetchData(relationsURL, &indexes.Relations); err != nil {
-		return indexes, err
-	}
-
-	return indexes, nil
+	return locResp.Locations, nil
 }
