@@ -23,6 +23,18 @@ footer {
     border-top: 1px solid #dadada;
 }
 
+footer {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #646464;
+    text-align: center;
+    padding: 12px 0;
+    background: linear-gradient(180deg, #ffffff, #e9e9e9 15%, #ffffff 50%, #e9e9e9 85%, #d3d3d3);
+    box-shadow: inset 0px 1px 2px rgba(255, 255, 255, 0.7), inset 0px -1px 2px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    border-top: 1px solid #dadada;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -32,28 +44,27 @@ footer {
 header {
     text-align: center;
     margin-bottom: 20px;
-  }
+}
 
-  h1 {
+h1 {
     font-size: 2em;
     margin-bottom: 10px;
     color: #333;
-  }
+}
 
-    /* Search Bar Styling */
-    .search-bar {
-        width: 100%;
-        max-width: 500px;
-        margin: 0 auto 30px;
-      }
-  
-      .search-bar input[type="text"] {
-        width: 100%;
-        padding: 10px;
-        font-size: 1em;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-      }
+.search-bar {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto 30px;
+}
+
+.search-bar input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
 
 /* Cards Grid */
 .artist-grid {
@@ -69,28 +80,20 @@ header {
     width: 250px;
     height: 350px;
     cursor: pointer;
-    transition: transform 0.2s ease;
 }
 
 .card-inner {
-position: relative;
-width: 100%;
-height: 100%;
-transform-style: preserve-3d;
-transition: transform 0.6s;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
 }
 
-.artist-card.flipped .card-inner {
-    transform: rotateY(180deg);
-}
-
-ul {
-    list-style-type: none;
-    text-align: center;
-}
-
-/* Card Front */
-.card-front, .card-members {
+/* Card Faces Styling */
+.card-front,
+.card-members,
+.card-locations {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -98,25 +101,53 @@ ul {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     padding: 20px;
     box-sizing: border-box;
+    transition: opacity 0.6s;
+    /* Smooth fade for switching visibility */
+    opacity: 0;
+    /* Hidden by default, only active face will have opacity 1 */
 }
 
+/* Front Face */
 .card-front {
     background-color: white;
+    opacity: 1;
+    /* Initially visible */
 }
 
-/* Card Back */
+.category-title {
+    font-size: 20px;
+    margin: 6px 0px;
+}
+
+/* First Back Face (Members) */
 .card-members {
     background-color: lightgray;
     transform: rotateY(180deg);
     justify-content: flex-start;
 }
 
-.category-title {
+/* Second Back Face (Locations) */
+.card-locations {
+    background-color: lightblue;
+    transform: rotateY(0deg);
+    justify-content: flex-start;
+    overflow-y: scroll;
+}
+
+/* Additional Styling for Card Content */
+ul {
+    list-style-type: none;
+    text-align: center;
+}
+
+.card-category-title {
     font-size: 20px;
-    margin: 6px 0px;
+    font-weight: bold;
+    margin-bottom: 4px;
+    margin-top: 4px;
 }
 
 .artist-name {
