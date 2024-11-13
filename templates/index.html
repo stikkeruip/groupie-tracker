@@ -39,7 +39,9 @@
                         </div>
                     </div>
                     <div class="card-members border">
-                        <h3 class="category-title">Members</h3>
+                        <h3 class="category-title">
+                            {{ if eq (len .Members) 1 }}Artist{{ else }}Members{{ end }}
+                        </h3>
                         <ul>
                             {{ range .Members }}
                             <li>{{ . }}</li>
@@ -49,7 +51,7 @@
                     <div class="card-locations border">
                         <h3 class="category-title">Locations</h3>
                         <ul class="locations-list">
-                            <!-- Locations will be added here -->
+                            <!-- Locations will be added here dynamically -->
                         </ul>
                     </div>
                 </div>

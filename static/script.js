@@ -35,15 +35,23 @@ function flipCard(cardElement, index) {
         console.log(`About to flip ${artistName}'s card to: Front Side`);
     } else if (nextFlipCount === 1) {
         console.log(`About to flip ${artistName}'s card to: Members Section`);
+        // Update Members title
+        const membersTitle = cardElement.querySelector('.card-members .category-title');
+        const membersList = cardElement.querySelectorAll('.card-members li');
+        membersTitle.textContent = membersList.length === 1 ? 'Artist' : 'Members';
     } else {
         console.log(`About to flip ${artistName}'s card to: Locations Section`);
         // When flipping to locations, fetch and display the data
         const locationsList = cardElement.querySelector('.locations-list');
+        const locationsTitle = cardElement.querySelector('.card-locations .category-title');
         locationsList.innerHTML = '<li>Loading locations...</li>';
 
         fetch(`/api/locations?id=${artistId}`)
             .then(response => response.json())
             .then(locations => {
+                // Update Locations title
+                locationsTitle.textContent = locations.length === 1 ? 'Location' : 'Locations';
+                
                 // Format locations before displaying them
                 locationsList.innerHTML = locations.map(location => {
                     const formattedLocation = location
