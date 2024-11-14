@@ -50,8 +50,28 @@
                     </div>
                     <div class="card-locations border">
                         <h3 class="category-title">Locations</h3>
-                        <ul class="locations-list">
-                            <!-- Locations will be added here dynamically -->
+                        <ul>
+                            {{ $artistID := .ID }}
+                            {{ range $.Locations }}
+                                {{ if eq .ID $artistID }}
+                                    {{ range .Locations }}
+                                        <li>{{ FormatLocation . }}</li>
+                                    {{ end }}
+                                {{ end }}
+                            {{ end }}
+                        </ul>
+                    </div>
+                    <div class="card-dates border">
+                        <h3 class="category-title">Dates</h3>
+                        <ul>
+                            {{ $artistID := .ID }}
+                            {{ range $.Dates }}
+                                {{ if eq .ID $artistID }}
+                                    {{ range .Dates }}
+                                        <li>{{ . }}</li>
+                                    {{ end }}
+                                {{ end }}
+                            {{ end }}
                         </ul>
                     </div>
                 </div>

@@ -1,104 +1,86 @@
-const cardStates = [];
-let currentlyFlippedCardIndex = null;
+const cardStates = new Map();
 
 document.addEventListener("DOMContentLoaded", () => {
     const cards = document.querySelectorAll(".artist-card");
     cards.forEach((card, index) => {
-        cardStates[index] = 0;
-        card.addEventListener("click", () => flipCard(card, index));
+        // Initialize each card's state to 0 (front face)
+        cardStates.set(card, 0);
+        
+        // Initialize card to show front face
+        const cardInner = card.querySelector(".card-inner");
+        const front = card.querySelector(".card-front");
+        const members = card.querySelector(".card-members");
+        const locations = card.querySelector(".card-locations");
+        const dates = card.querySelector(".card-dates");
+        
+        cardInner.style.transform = "rotateY(0deg)";
+        front.style.opacity = "1";
+        members.style.opacity = "0";
+        locations.style.opacity = "0";
+        dates.style.opacity = "0";
+        
+        card.addEventListener("click", () => flipCard(card));
     });
+    
     const searchInput = document.getElementById('searchInput');
     searchInput.addEventListener('input', searchArtists);
 });
 
-function flipCard(cardElement, index) {
+function flipCard(cardElement) {
     const artistName = cardElement.getAttribute('data-artist-name');
-    const artistId = cardElement.getAttribute('data-artist-id');
+    const currentState = cardStates.get(cardElement);
+    const nextState = (currentState + 1) % 4;
+    cardStates.set(cardElement, nextState);
 
-    // Reset all cards except the one being flipped
-    const allCards = document.querySelectorAll('.artist-card');
-    allCards.forEach((card, idx) => {
-        if (idx !== index) {
-            resetCard(card, idx);
-        }
-    });
+    const cardInner = cardElement.querySelector(".card-inner");
+    const front = cardElement.querySelector(".card-front");
+    const members = cardElement.querySelector(".card-members");
+    const locations = cardElement.querySelector(".card-locations");
+    const dates = cardElement.querySelector(".card-dates");
 
-    // Cycle through card states
-    let nextFlipCount = (cardStates[index] + 1) % 3;
-    cardStates[index] = nextFlipCount;
+    // Reset opacity for all faces
+    front.style.opacity = "0";
+    members.style.opacity = "0";
+    locations.style.opacity = "0";
+    dates.style.opacity = "0";
 
-    // Set this card as the currently flipped card
-    currentlyFlippedCardIndex = index;
-
-    // Log which section we're about to flip to
-    if (nextFlipCount === 0) {
-        console.log(`About to flip ${artistName}'s card to: Front Side`);
-    } else if (nextFlipCount === 1) {
-        console.log(`About to flip ${artistName}'s card to: Members Section`);
+    // Update the card based on the next state
+    if (nextState === 0) {
+        console.log(`Flipping ${artistName}'s card to: Front Side`);
+        cardInner.style.transform = "rotateY(0deg)";
+        front.style.opacity = "1";
+    } else if (nextState === 1) {
+        console.log(`Flipping ${artistName}'s card to: Members Section`);
+        cardInner.style.transform = "rotateY(180deg)";
+        members.style.opacity = "1";
+        
         // Update Members title
         const membersTitle = cardElement.querySelector('.card-members .category-title');
         const membersList = cardElement.querySelectorAll('.card-members li');
         membersTitle.textContent = membersList.length === 1 ? 'Artist' : 'Members';
-    } else {
-        console.log(`About to flip ${artistName}'s card to: Locations Section`);
-        // When flipping to locations, fetch and display the data
-        const locationsList = cardElement.querySelector('.locations-list');
-        const locationsTitle = cardElement.querySelector('.card-locations .category-title');
-        locationsList.innerHTML = '<li>Loading locations...</li>';
-
-        fetch(`/api/locations?id=${artistId}`)
-            .then(response => response.json())
-            .then(locations => {
-                // Update Locations title
-                locationsTitle.textContent = locations.length === 1 ? 'Location' : 'Locations';
-                
-                // Format locations before displaying them
-                locationsList.innerHTML = locations.map(location => {
-                    const formattedLocation = location
-                        .replace(/_/g, ' ')
-                        .replace(/-/g, ', ')
-                        .replace(/\b\w/g, (char) => char.toUpperCase());
-                    return `<li>${formattedLocation}</li>`;
-                }).join('');
-            })
-            .catch(error => {
-                locationsList.innerHTML = '<li>Error loading locations</li>';
-                console.error('Error:', error);
-            });
-    }
-
-    const cardInner = cardElement.querySelector(".card-inner");
-    const front = cardElement.querySelector(".card-front");
-    const members = cardElement.querySelector(".card-members");
-    const locations = cardElement.querySelector(".card-locations");
-
-    front.style.opacity = "0";
-    members.style.opacity = "0";
-    locations.style.opacity = "0";
-
-    if (nextFlipCount === 0) {
-        cardInner.style.transform = "rotateY(0deg)";
-        front.style.opacity = "1";
-    } else if (nextFlipCount === 1) {
-        cardInner.style.transform = "rotateY(180deg)";
-        members.style.opacity = "1";
-    } else {
+    } else if (nextState === 2) {
+        console.log(`Flipping ${artistName}'s card to: Locations Section`);
         cardInner.style.transform = "rotateY(360deg)";
         locations.style.opacity = "1";
+        
+        // Update Locations title
+        const locationsTitle = cardElement.querySelector('.card-locations .category-title');
+        const locationsList = cardElement.querySelectorAll('.card-locations li');
+        locationsTitle.textContent = locationsList.length === 1 ? 'Location' : 'Locations';
+    } else if (nextState === 3) {
+        console.log(`Flipping ${artistName}'s card to: Dates Section`);
+        cardInner.style.transform = "rotateY(540deg)";
+        dates.style.opacity = "1";
+        
+        // Update Dates title
+        const datesTitle = cardElement.querySelector('.card-dates .category-title');
+        const datesList = cardElement.querySelectorAll('.card-dates li');
+        datesTitle.textContent = datesList.length === 1 ? 'Date' : 'Dates';
+    } else {
+        return
     }
 }
-function resetCard(cardElement, index) {
-    cardStates[index] = 0;
-    const cardInner = cardElement.querySelector(".card-inner");
-    const front = cardElement.querySelector(".card-front");
-    const members = cardElement.querySelector(".card-members");
-    const locations = cardElement.querySelector(".card-locations");
 
-    cardInner.style.transform = "rotateY(0deg)";
-    front.style.opacity = "1";
-    members.style.opacity = "0";
-    locations.style.opacity = "0";
-}
 function searchArtists() {
     const searchInput = document.getElementById('searchInput');
     const searchSuggestions = document.getElementById('searchSuggestions');
@@ -120,7 +102,8 @@ function searchArtists() {
         const creationDate = card.querySelector('.artist-info p:nth-child(1) strong').textContent.toLowerCase();
         const firstAlbum = card.querySelector('.artist-info p:nth-child(2) strong').textContent.toLowerCase();
         const members = Array.from(card.querySelectorAll('.card-members li')).map(li => li.textContent.toLowerCase());
-        const locations = Array.from(card.querySelectorAll('.locations-list li')).map(li => li.textContent.toLowerCase());
+        const locations = Array.from(card.querySelectorAll('.card-locations li')).map(li => li.textContent.toLowerCase());
+        const dates = Array.from(card.querySelectorAll('.card-dates li')).map(li => li.textContent.toLowerCase());
 
         let matchFound = false;
 
@@ -149,6 +132,13 @@ function searchArtists() {
         locations.forEach(location => {
             if (location.toLowerCase().includes(filter)) {
                 suggestions.push({ text: `${location} (${card.getAttribute('data-artist-name')})`, type: 'location' });
+                matchFound = true;
+            }
+        });
+
+        dates.forEach(date => {
+            if (date.toLowerCase().includes(filter)) {
+                suggestions.push({ text: `${date} (${card.getAttribute('data-artist-name')})`, type: 'date' });
                 matchFound = true;
             }
         });

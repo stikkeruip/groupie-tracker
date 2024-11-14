@@ -1,21 +1,39 @@
 package handlers
 
 import (
-	"encoding/json"
 	"groupie-tracker/data"
 	"html/template"
 	"net/http"
 	"path/filepath"
-	"strconv"
+	"strings"
 )
 
-// Load the templates
-var templates = template.Must(template.ParseFiles(filepath.Join("templates", "index.html")))
+// FormatLocation formats a location string by replacing underscores and hyphens
+func FormatLocation(location string) string {
+	// Replace underscores with spaces
+	location = strings.ReplaceAll(location, "_", " ")
+	// Replace hyphens with commas and spaces
+	location = strings.ReplaceAll(location, "-", ", ")
+	// Capitalize first letter of each word
+	words := strings.Fields(location)
+	for i, word := range words {
+		words[i] = strings.ToUpper(string(word[0])) + strings.ToLower(word[1:])
+	}
+	return strings.Join(words, " ")
+}
+
+// Create template functions map
+var funcMap = template.FuncMap{
+	"FormatLocation": FormatLocation,
+}
+
+// Load the templates with function map
+var templates = template.Must(template.New("").Funcs(funcMap).ParseFiles(filepath.Join("templates", "index.html")))
 
 // IndexHandler renders the homepage with artist data
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	// Fetch all data
-	indexes, err := data.FetchInitialData()
+	indexes, err := data.FetchAllData()
 	if err != nil {
 		http.Error(w, "Failed to fetch artist data", http.StatusInternalServerError)
 		return
@@ -26,32 +44,4 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, "Failed to render template", http.StatusInternalServerError)
 	}
-}
-
-// LocationsHandler handles locations data request
-func LocationsHandler(w http.ResponseWriter, r *http.Request) {
-	// Get artist ID from query parameter
-	artistID := r.URL.Query().Get("id")
-	if artistID == "" {
-		http.Error(w, "Artist ID is required", http.StatusBadRequest)
-		return
-	}
-
-	// Convert ID to int
-	id, err := strconv.Atoi(artistID)
-	if err != nil {
-		http.Error(w, "Invalid artist ID", http.StatusBadRequest)
-		return
-	}
-
-	// Fetch locations
-	locations, err := data.FetchLocationsSlice(id)
-	if err != nil {
-		http.Error(w, "Failed to fetch locations", http.StatusInternalServerError)
-		return
-	}
-
-	// Set content type and encode response
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(locations)
 }

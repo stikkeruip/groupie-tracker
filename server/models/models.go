@@ -9,12 +9,38 @@ type Artist struct {
 	FirstAlbum   string   `json:"firstAlbum"`
 }
 
-type Locations struct {
+type Location struct {
 	ID        int      `json:"id"`
 	Locations []string `json:"locations"`
 	Dates     string   `json:"dates"`
 }
 
-type PageData struct {
-	Artists []Artist
+type Date struct {
+	ID    int      `json:"id"`
+	Dates []string `json:"dates"`
+}
+
+type Relation struct {
+	ID             int                 `json:"id"`
+	DatesLocations map[string][]string `json:"datesLocations"`
+}
+
+type LocationData struct {
+	Index []Location `json:"index"`
+}
+
+type DateData struct {
+	Index []Date `json:"index"`
+}
+
+type RelationData struct {
+	Index []Relation `json:"index"`
+}
+
+// Indexes holds all the data needed for the template
+type Indexes struct {
+	Artists   []Artist   // Artist data
+	Locations []Location // Location data from the index field
+	Dates     []Date     // Date data from the index field
+	Relations []Relation // Relation data from the index field
 }

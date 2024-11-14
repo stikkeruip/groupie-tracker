@@ -1,39 +1,68 @@
 package data
 
 import (
-	"fmt"
+	"encoding/json"
 	"groupie-tracker/server/models"
-	"groupie-tracker/utils"
+	"net/http"
 )
 
-func FetchInitialData() (*models.PageData, error) {
-	var artists []models.Artist
+func FetchAllData() (models.Indexes, error) {
+	var indexes models.Indexes
 
-	// Fetch Artists
+	// Fetch Artists - handle array response directly
 	artistsURL := "https://groupietrackers.herokuapp.com/api/artists"
-	if err := utils.FetchData(artistsURL, &artists); err != nil {
-		return nil, err
+	resp, err := http.Get(artistsURL)
+	if err != nil {
+		return indexes, err
+	}
+	defer resp.Body.Close()
+
+	// Decode the JSON array directly into Artists slice
+	if err := json.NewDecoder(resp.Body).Decode(&indexes.Artists); err != nil {
+		return indexes, err
 	}
 
-	// Create page data structure
-	pageData := &models.PageData{
-		Artists: artists,
+	// Fetch Locations
+	locationsURL := "https://groupietrackers.herokuapp.com/api/locations"
+	resp, err = http.Get(locationsURL)
+	if err != nil {
+		return indexes, err
 	}
+	defer resp.Body.Close()
 
-	return pageData, nil
-}
-
-func FetchLocationsSlice(artistID int) ([]string, error) {
-	// Construct the URL with the artist's ID
-	locationsURL := fmt.Sprintf("https://groupietrackers.herokuapp.com/api/locations/%d", artistID)
-
-	// Create a variable to hold the response
-	var locResp models.Locations
-
-	// Use FetchData to get and decode the data
-	if err := utils.FetchData(locationsURL, &locResp); err != nil {
-		return nil, err
+	var locationData models.LocationData
+	if err := json.NewDecoder(resp.Body).Decode(&locationData); err != nil {
+		return indexes, err
 	}
+	indexes.Locations = locationData.Index
 
-	return locResp.Locations, nil
+	// Fetch Dates
+	datesURL := "https://groupietrackers.herokuapp.com/api/dates"
+	resp, err = http.Get(datesURL)
+	if err != nil {
+		return indexes, err
+	}
+	defer resp.Body.Close()
+
+	var dateData models.DateData
+	if err := json.NewDecoder(resp.Body).Decode(&dateData); err != nil {
+		return indexes, err
+	}
+	indexes.Dates = dateData.Index
+
+	// Fetch Relations
+	relationsURL := "https://groupietrackers.herokuapp.com/api/relation"
+	resp, err = http.Get(relationsURL)
+	if err != nil {
+		return indexes, err
+	}
+	defer resp.Body.Close()
+
+	var relationData models.RelationData
+	if err := json.NewDecoder(resp.Body).Decode(&relationData); err != nil {
+		return indexes, err
+	}
+	indexes.Relations = relationData.Index
+
+	return indexes, nil
 }
