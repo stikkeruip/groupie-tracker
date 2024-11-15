@@ -391,5 +391,5 @@ h1 {
     border-radius: 0 0 10px 10px;
     z-index: 0;
     /* Ensure the progress bar is below the card content */
-    margin: 0px 3px 1px 3px;
+    margin: 0px 5px 1px 3px;
 }

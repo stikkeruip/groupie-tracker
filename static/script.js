@@ -100,7 +100,7 @@ function flipCard(cardElement) {
         cardInner.style.transform = "rotateY(720deg)";
         relations.style.opacity = "1";
         relations.style.zIndex = "5";
-        progressBar.style.width = "100%"; // Update progress bar
+        progressBar.style.width = "98%"; // Update progress bar
 
         const relationsTitle = cardElement.querySelector('.card-relations .category-title');
         const relationsList = cardElement.querySelectorAll('.card-relations li');
