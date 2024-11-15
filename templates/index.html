@@ -68,7 +68,7 @@
                             {{ range $.Dates }}
                             {{ if eq .ID $artistID }}
                             {{ range .Dates }}
-                            <li>{{ . }}</li>
+                            <li>{{ FormatDate . }}</li>
                             {{ end }}
                             {{ end }}
                             {{ end }}

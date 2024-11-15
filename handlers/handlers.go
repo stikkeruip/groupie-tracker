@@ -22,9 +22,17 @@ func FormatLocation(location string) string {
 	return strings.Join(words, " ")
 }
 
+func FormatDate(date string) string {
+	// Remove asterisks (*)
+	date = strings.ReplaceAll(date, "*", "")
+	// Return the date as is without any other modifications
+	return date
+}
+
 // Create template functions map
 var funcMap = template.FuncMap{
 	"FormatLocation": FormatLocation,
+	"FormatDate":     FormatDate,
 }
 
 // Load the templates with function map
