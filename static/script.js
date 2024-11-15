@@ -1,4 +1,5 @@
 const cardStates = new Map();
+let debounceTimer;
 
 document.addEventListener("DOMContentLoaded", () => {
     const cards = document.querySelectorAll(".artist-card");
@@ -23,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     const searchInput = document.getElementById('searchInput');
-    searchInput.addEventListener('input', searchArtists);
+    searchInput.addEventListener('input', debounceSearch);
 });
 
 function flipCard(cardElement) {
@@ -37,32 +38,32 @@ function flipCard(cardElement) {
     const members = cardElement.querySelector(".card-members");
     const locations = cardElement.querySelector(".card-locations");
     const dates = cardElement.querySelector(".card-dates");
-    const relations = cardElement.querySelector(".card-relations"); // New Relations section
+    const relations = cardElement.querySelector(".card-relations");
 
     // Reset opacity and z-index for all faces
     front.style.opacity = "0";
     members.style.opacity = "0";
     locations.style.opacity = "0";
     dates.style.opacity = "0";
-    relations.style.opacity = "0"; // Reset Relations section
+    relations.style.opacity = "0";
 
     front.style.zIndex = "1";
     members.style.zIndex = "1";
     locations.style.zIndex = "1";
     dates.style.zIndex = "1";
-    relations.style.zIndex = "1"; // Reset z-index
+    relations.style.zIndex = "1";
 
     // Update the card based on the next state
     if (nextState === 0) {
         console.log(`Flipping ${artistName}'s card to: Front Side`);
         cardInner.style.transform = "rotateY(0deg)";
         front.style.opacity = "1";
-        front.style.zIndex = "5"; // Bring front to top
+        front.style.zIndex = "5";
     } else if (nextState === 1) {
         console.log(`Flipping ${artistName}'s card to: Members Section`);
         cardInner.style.transform = "rotateY(180deg)";
         members.style.opacity = "1";
-        members.style.zIndex = "5"; // Bring members to top
+        members.style.zIndex = "5";
 
         const membersTitle = cardElement.querySelector('.card-members .category-title');
         const membersList = cardElement.querySelectorAll('.card-members li');
@@ -71,7 +72,7 @@ function flipCard(cardElement) {
         console.log(`Flipping ${artistName}'s card to: Locations Section`);
         cardInner.style.transform = "rotateY(360deg)";
         locations.style.opacity = "1";
-        locations.style.zIndex = "5"; // Bring locations to top
+        locations.style.zIndex = "5";
 
         const locationsTitle = cardElement.querySelector('.card-locations .category-title');
         const locationsList = cardElement.querySelectorAll('.card-locations li');
@@ -80,7 +81,7 @@ function flipCard(cardElement) {
         console.log(`Flipping ${artistName}'s card to: Dates Section`);
         cardInner.style.transform = "rotateY(540deg)";
         dates.style.opacity = "1";
-        dates.style.zIndex = "5"; // Bring dates to top
+        dates.style.zIndex = "5";
 
         const datesTitle = cardElement.querySelector('.card-dates .category-title');
         const datesList = cardElement.querySelectorAll('.card-dates li');
@@ -89,12 +90,26 @@ function flipCard(cardElement) {
         console.log(`Flipping ${artistName}'s card to: Relations Section`);
         cardInner.style.transform = "rotateY(720deg)";
         relations.style.opacity = "1";
-        relations.style.zIndex = "5"; // Bring relations to top
+        relations.style.zIndex = "5";
 
         const relationsTitle = cardElement.querySelector('.card-relations .category-title');
         const relationsList = cardElement.querySelectorAll('.card-relations li');
         relationsTitle.textContent = relationsList.length === 1 ? 'Relation' : 'Relations';
     }
+}
+
+function debounceSearch() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput.value.length >= 3) {
+            searchArtists();
+        } else {
+            const searchSuggestions = document.getElementById('searchSuggestions');
+            searchSuggestions.innerHTML = '';
+            document.querySelectorAll('.artist-card').forEach(card => card.style.display = "");
+        }
+    }, 300); // 300ms delay
 }
 
 function searchArtists() {
@@ -106,7 +121,7 @@ function searchArtists() {
     // Clear previous suggestions
     searchSuggestions.innerHTML = '';
 
-    if (filter.length === 0) {
+    if (filter.length < 3) {
         artistCards.forEach(card => card.style.display = "");
         return;
     }
@@ -170,7 +185,22 @@ function searchArtists() {
         suggestionElement.addEventListener('click', () => {
             searchInput.value = suggestion.text.split(' (')[0]; // Set only the main part of the suggestion
             searchArtists();
+            searchSuggestions.innerHTML = ''; // Clear suggestions after clicking
         });
         searchSuggestions.appendChild(suggestionElement);
     });
 }
+
+// Add this event listener to hide suggestions when clicking outside
+document.addEventListener('click', function(event) {
+    const searchSuggestions = document.getElementById('searchSuggestions');
+    const searchInput = document.getElementById('searchInput');
+    if (event.target !== searchInput && event.target !== searchSuggestions) {
+        searchSuggestions.innerHTML = '';
+    }
+});
+
+// Prevent the click on suggestions from bubbling up to the document
+document.getElementById('searchSuggestions').addEventListener('click', function(event) {
+    event.stopPropagation();
+});

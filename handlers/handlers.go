@@ -18,6 +18,11 @@ func FormatLocation(location string) string {
 	words := strings.Fields(location)
 	for i, word := range words {
 		words[i] = strings.ToUpper(string(word[0])) + strings.ToLower(word[1:])
+		if words[i] == "Usa" {
+			words[i] = "USA"
+		} else if words[i] == "Uk" {
+			words[i] = "UK"
+		}
 	}
 	return strings.Join(words, " ")
 }
