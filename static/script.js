@@ -13,6 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const members = card.querySelector(".card-members");
         const locations = card.querySelector(".card-locations");
         const dates = card.querySelector(".card-dates");
+        const relations = card.querySelector(".card-relations");
+        const progressBar = document.createElement('div');
+        progressBar.classList.add('card-progress');
+        card.appendChild(progressBar);
 
         cardInner.style.transform = "rotateY(0deg)";
         front.style.opacity = "1";
@@ -39,6 +43,7 @@ function flipCard(cardElement) {
     const locations = cardElement.querySelector(".card-locations");
     const dates = cardElement.querySelector(".card-dates");
     const relations = cardElement.querySelector(".card-relations");
+    const progressBar = cardElement.querySelector('.card-progress');
 
     // Reset opacity and z-index for all faces
     front.style.opacity = "0";
@@ -59,11 +64,13 @@ function flipCard(cardElement) {
         cardInner.style.transform = "rotateY(0deg)";
         front.style.opacity = "1";
         front.style.zIndex = "5";
+        progressBar.style.width = "0"; // Hide progress bar
     } else if (nextState === 1) {
         console.log(`Flipping ${artistName}'s card to: Members Section`);
         cardInner.style.transform = "rotateY(180deg)";
         members.style.opacity = "1";
         members.style.zIndex = "5";
+        progressBar.style.width = "25%"; // Update progress bar
 
         const membersTitle = cardElement.querySelector('.card-members .category-title');
         const membersList = cardElement.querySelectorAll('.card-members li');
@@ -73,6 +80,7 @@ function flipCard(cardElement) {
         cardInner.style.transform = "rotateY(360deg)";
         locations.style.opacity = "1";
         locations.style.zIndex = "5";
+        progressBar.style.width = "50%"; // Update progress bar
 
         const locationsTitle = cardElement.querySelector('.card-locations .category-title');
         const locationsList = cardElement.querySelectorAll('.card-locations li');
@@ -82,6 +90,7 @@ function flipCard(cardElement) {
         cardInner.style.transform = "rotateY(540deg)";
         dates.style.opacity = "1";
         dates.style.zIndex = "5";
+        progressBar.style.width = "75%"; // Update progress bar
 
         const datesTitle = cardElement.querySelector('.card-dates .category-title');
         const datesList = cardElement.querySelectorAll('.card-dates li');
@@ -91,12 +100,14 @@ function flipCard(cardElement) {
         cardInner.style.transform = "rotateY(720deg)";
         relations.style.opacity = "1";
         relations.style.zIndex = "5";
+        progressBar.style.width = "100%"; // Update progress bar
 
         const relationsTitle = cardElement.querySelector('.card-relations .category-title');
         const relationsList = cardElement.querySelectorAll('.card-relations li');
         relationsTitle.textContent = relationsList.length === 1 ? 'Relation' : 'Relations';
     }
 }
+
 
 function debounceSearch() {
     clearTimeout(debounceTimer);
@@ -192,7 +203,7 @@ function searchArtists() {
 }
 
 // Add this event listener to hide suggestions when clicking outside
-document.addEventListener('click', function(event) {
+document.addEventListener('click', function (event) {
     const searchSuggestions = document.getElementById('searchSuggestions');
     const searchInput = document.getElementById('searchInput');
     if (event.target !== searchInput && event.target !== searchSuggestions) {
@@ -201,6 +212,6 @@ document.addEventListener('click', function(event) {
 });
 
 // Prevent the click on suggestions from bubbling up to the document
-document.getElementById('searchSuggestions').addEventListener('click', function(event) {
+document.getElementById('searchSuggestions').addEventListener('click', function (event) {
     event.stopPropagation();
 });
