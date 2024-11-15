@@ -135,7 +135,8 @@ h1 {
 .card-front,
 .card-members,
 .card-locations,
-.card-dates {
+.card-dates,
+.card-relations {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -181,6 +182,14 @@ h1 {
     opacity: 0;
 }
 
+/* Dates Face */
+.card-relations {
+    transform: rotateY(720deg);
+    background-color: #e8f4f8;
+    overflow-y: auto;
+    opacity: 0;
+}
+
 .category-title {
     font-size: 20px;
     margin: 6px 0px;
@@ -194,8 +203,7 @@ ul {
 }
 
 li {
-    margin: 5px 0;
-    padding: 5px;
+    padding: 4px;
     border-bottom: 1px solid #eee;
 }
 

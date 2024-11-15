@@ -53,11 +53,11 @@
                         <ul>
                             {{ $artistID := .ID }}
                             {{ range $.Locations }}
-                                {{ if eq .ID $artistID }}
-                                    {{ range .Locations }}
-                                        <li>{{ FormatLocation . }}</li>
-                                    {{ end }}
-                                {{ end }}
+                            {{ if eq .ID $artistID }}
+                            {{ range .Locations }}
+                            <li>{{ FormatLocation . }}</li>
+                            {{ end }}
+                            {{ end }}
                             {{ end }}
                         </ul>
                     </div>
@@ -66,11 +66,24 @@
                         <ul>
                             {{ $artistID := .ID }}
                             {{ range $.Dates }}
-                                {{ if eq .ID $artistID }}
-                                    {{ range .Dates }}
-                                        <li>{{ . }}</li>
-                                    {{ end }}
-                                {{ end }}
+                            {{ if eq .ID $artistID }}
+                            {{ range .Dates }}
+                            <li>{{ . }}</li>
+                            {{ end }}
+                            {{ end }}
+                            {{ end }}
+                        </ul>
+                    </div>
+                    <div class="card-relations">
+                        <h3 class="category-title">Relations</h3>
+                        <ul>
+                            {{ $artistID := .ID }}
+                            {{ range $.Dates }}
+                            {{ if eq .ID $artistID }}
+                            {{ range .Dates }}
+                            <li>{{ . }}</li>
+                            {{ end }}
+                            {{ end }}
                             {{ end }}
                         </ul>
                     </div>

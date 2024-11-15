@@ -5,23 +5,23 @@ document.addEventListener("DOMContentLoaded", () => {
     cards.forEach((card, index) => {
         // Initialize each card's state to 0 (front face)
         cardStates.set(card, 0);
-        
+
         // Initialize card to show front face
         const cardInner = card.querySelector(".card-inner");
         const front = card.querySelector(".card-front");
         const members = card.querySelector(".card-members");
         const locations = card.querySelector(".card-locations");
         const dates = card.querySelector(".card-dates");
-        
+
         cardInner.style.transform = "rotateY(0deg)";
         front.style.opacity = "1";
         members.style.opacity = "0";
         locations.style.opacity = "0";
         dates.style.opacity = "0";
-        
+
         card.addEventListener("click", () => flipCard(card));
     });
-    
+
     const searchInput = document.getElementById('searchInput');
     searchInput.addEventListener('input', searchArtists);
 });
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function flipCard(cardElement) {
     const artistName = cardElement.getAttribute('data-artist-name');
     const currentState = cardStates.get(cardElement);
-    const nextState = (currentState + 1) % 4;
+    const nextState = (currentState + 1) % 5; // Cycle through 5 states
     cardStates.set(cardElement, nextState);
 
     const cardInner = cardElement.querySelector(".card-inner");
@@ -37,12 +37,14 @@ function flipCard(cardElement) {
     const members = cardElement.querySelector(".card-members");
     const locations = cardElement.querySelector(".card-locations");
     const dates = cardElement.querySelector(".card-dates");
+    const relations = cardElement.querySelector(".card-relations"); // New Relations section
 
     // Reset opacity for all faces
     front.style.opacity = "0";
     members.style.opacity = "0";
     locations.style.opacity = "0";
     dates.style.opacity = "0";
+    relations.style.opacity = "0"; // Reset Relations section
 
     // Update the card based on the next state
     if (nextState === 0) {
@@ -53,8 +55,7 @@ function flipCard(cardElement) {
         console.log(`Flipping ${artistName}'s card to: Members Section`);
         cardInner.style.transform = "rotateY(180deg)";
         members.style.opacity = "1";
-        
-        // Update Members title
+
         const membersTitle = cardElement.querySelector('.card-members .category-title');
         const membersList = cardElement.querySelectorAll('.card-members li');
         membersTitle.textContent = membersList.length === 1 ? 'Artist' : 'Members';
@@ -62,8 +63,7 @@ function flipCard(cardElement) {
         console.log(`Flipping ${artistName}'s card to: Locations Section`);
         cardInner.style.transform = "rotateY(360deg)";
         locations.style.opacity = "1";
-        
-        // Update Locations title
+
         const locationsTitle = cardElement.querySelector('.card-locations .category-title');
         const locationsList = cardElement.querySelectorAll('.card-locations li');
         locationsTitle.textContent = locationsList.length === 1 ? 'Location' : 'Locations';
@@ -71,15 +71,21 @@ function flipCard(cardElement) {
         console.log(`Flipping ${artistName}'s card to: Dates Section`);
         cardInner.style.transform = "rotateY(540deg)";
         dates.style.opacity = "1";
-        
-        // Update Dates title
+
         const datesTitle = cardElement.querySelector('.card-dates .category-title');
         const datesList = cardElement.querySelectorAll('.card-dates li');
         datesTitle.textContent = datesList.length === 1 ? 'Date' : 'Dates';
-    } else {
-        return
+    } else if (nextState === 4) {
+        console.log(`Flipping ${artistName}'s card to: Relations Section`);
+        cardInner.style.transform = "rotateY(720deg)";
+        relations.style.opacity = "1";
+
+        const relationsTitle = cardElement.querySelector('.card-relations .category-title');
+        const relationsList = cardElement.querySelectorAll('.card-relations li');
+        relationsTitle.textContent = relationsList.length === 1 ? 'Relation' : 'Relations';
     }
 }
+
 
 function searchArtists() {
     const searchInput = document.getElementById('searchInput');
