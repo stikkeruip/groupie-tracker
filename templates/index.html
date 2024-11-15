@@ -27,9 +27,9 @@
         <!-- Artist Cards Grid -->
         <div class="artist-grid">
             {{ range .Artists }}
-            <div class="artist-card border" data-artist-name="{{ .Name }}" data-artist-id="{{ .ID }}">
-                <div class="card-inner border">
-                    <div class="card-front border">
+            <div class="artist-card" data-artist-name="{{ .Name }}" data-artist-id="{{ .ID }}">
+                <div class="card-inner">
+                    <div class="card-front">
                         <div class="artist-name">{{ .Name }}</div>
                         <div class="artist-image" style="background-image: url('{{ .Image }}');"></div>
                         <div class="artist-info">
@@ -38,7 +38,7 @@
                             <p>Members: <strong>{{ len .Members }}</strong></p>
                         </div>
                     </div>
-                    <div class="card-members border">
+                    <div class="card-members">
                         <h3 class="category-title">
                             {{ if eq (len .Members) 1 }}Artist{{ else }}Members{{ end }}
                         </h3>
@@ -48,7 +48,7 @@
                             {{ end }}
                         </ul>
                     </div>
-                    <div class="card-locations border">
+                    <div class="card-locations">
                         <h3 class="category-title">Locations</h3>
                         <ul>
                             {{ $artistID := .ID }}
@@ -61,7 +61,7 @@
                             {{ end }}
                         </ul>
                     </div>
-                    <div class="card-dates border">
+                    <div class="card-dates">
                         <h3 class="category-title">Dates</h3>
                         <ul>
                             {{ $artistID := .ID }}
@@ -75,13 +75,20 @@
                         </ul>
                     </div>
                     <div class="card-relations">
-                        <h3 class="category-title">Relations</h3>
+                        <h3 class="category-title">Dates and Locations</h3>
                         <ul>
                             {{ $artistID := .ID }}
-                            {{ range $.Dates }}
+                            {{ range $.Relations }}
                             {{ if eq .ID $artistID }}
-                            {{ range .Dates }}
-                            <li>{{ . }}</li>
+                            {{ range $locations, $date := .DatesLocations }}
+                            <li>
+                                <strong>{{ FormatLocation $locations }}</strong>:
+                                <ul>
+                                    {{ range $date }}
+                                    <li>{{ . }}</li>
+                                    {{ end }}
+                                </ul>
+                            </li>
                             {{ end }}
                             {{ end }}
                             {{ end }}
