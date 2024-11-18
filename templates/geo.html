@@ -21,11 +21,11 @@
             <div class="geo-artist-card">
                 <div class="artist-image"
                     style="background-image: url('{{ .Artist.Image }}'); height: 150px; width:150px;"></div>
-                <ul>
+                <div class="locations-wrapper">
                     {{ range .Locations }}
-                    <li>{{ FormatLocation . }}</li>
+                    <div class="location-item">{{ FormatLocation . }}</div>
                     {{ end }}
-                </ul>
+                </div>
             </div>
             <div class="map-wrapper">
                 <div id="map" style="height: 450px; width: 100%; border-radius: 10px;"></div>
@@ -423,7 +423,6 @@
                     }
                 });
             });
-
         }
     </script>
 </body>

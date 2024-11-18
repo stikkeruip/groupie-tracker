@@ -430,6 +430,31 @@ h1 {
     display: flex;
     align-items: flex-start;
     margin-bottom: 20px;
+    flex-wrap: nowrap;
+}
+
+.locations-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-height: 150px;
+    overflow-y: auto;
+    margin: 15px;
+    flex: 1;
+    /* This allows it to grow and take up the remaining space */
+}
+
+.location-item {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.location-item:hover {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .container-map ul {
