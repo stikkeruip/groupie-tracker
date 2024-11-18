@@ -16,7 +16,23 @@
             <h1>Groupie Tracker</h1>
             <a href="main">Return to main bage</a>
         </header>
-        <h1>Locations for Artist ID: <span id="artistID"></span>{{ .artistID }}</h1>
+        <h1>Locations for Artist ID: {{ .ArtistID }}</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Artist</th>
+                    <th>Location</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ .Artist.Artist }}</td>
+                    <td>{{ FormatLocation .Artist.Location }}</td>
+                    <td>{{ FormatDate .Artist.Date }}</td>
+                </tr>
+            </tbody>
+        </table>
 
     </div>
 

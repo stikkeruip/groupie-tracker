@@ -2,9 +2,11 @@ package handlers
 
 import (
 	"groupie-tracker/data"
+	"groupie-tracker/server/models"
 	"html/template"
 	"net/http"
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -70,24 +72,50 @@ func LandingHandler(w http.ResponseWriter, r *http.Request) {
 
 // GeoHandler handles the geo page for each artist
 func GeoHandler(w http.ResponseWriter, r *http.Request) {
-	// Get the artist ID from the URL
-	artistID := strings.TrimPrefix(r.URL.Path, "/geo/")
-
-	// Pass the artist ID to your template (you may want to fetch artist info from a database or data structure here)
-	// Example: Retrieve artist info based on artistID
-
-	// Prepare the template (geo.html)
-	tmpl, err := template.ParseFiles("templates/geo.html")
+	// Parse the artist ID from the URL query
+	artistIDStr := r.URL.Query().Get("artistID")
+	artistID, err := strconv.Atoi(artistIDStr)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, "Invalid artist ID", http.StatusBadRequest)
 		return
 	}
 
-	// You can pass artist-specific data here, for example, fetch from your data model
-	// For simplicity, let's pass the artistID in this example
-	tmpl.Execute(w, struct {
-		ArtistID string
+	// Fetch all data
+	indexes, err := data.FetchAllData()
+	if err != nil {
+		http.Error(w, "Failed to fetch artist data", http.StatusInternalServerError)
+		return
+	}
+
+	// Find the artist with the given ID
+	var artist models.Artist
+	for _, index := range indexes.Artists {
+		if index.ID == artistID {
+			artist = index
+			break
+		}
+	}
+
+	// Create a data structure to pass to the template
+	data := struct {
+		Artist   models.Artist
+		ArtistID int
 	}{
+		Artist:   artist,
 		ArtistID: artistID,
-	})
+	}
+
+	// Parse the template
+	tmpl, err := template.ParseFiles("templates/geo.html")
+	if err != nil {
+		http.Error(w, "Failed to parse template", http.StatusInternalServerError)
+		return
+	}
+
+	// Render the template with the data
+	err = tmpl.Execute(w, data)
+	if err != nil {
+		http.Error(w, "Failed to execute template", http.StatusInternalServerError)
+		return
+	}
 }
