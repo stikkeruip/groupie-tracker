@@ -11,29 +11,41 @@
 <body>
     <div class="container">
         <header>
-            <h1>Groupie Tracker</h1>
-            <a href="/">Return to main page</a>
+            <a class="no-text-decoration" href="/main">
+                <h1>Groupie Tracker</h1>
+            </a>
+            <a href="/main">Return to main page</a>
         </header>
-        <h1>{{ .Artist.Name }} - Map</h1>
-
-        <div id="map" style="height: 500px; width: 100%;"></div>
+        <div class="container-map">
+            <h1>{{ .Artist.Name }} - Concert Locations</h1>
+            <div class="geo-artist-card">
+                <div class="artist-image"
+                    style="background-image: url('{{ .Artist.Image }}'); height: 150px; width:150px;"></div>
+                <ul>
+                    {{ range .Locations }}
+                    <li>{{ FormatLocation . }}</li>
+                    {{ end }}
+                </ul>
+            </div>
+            <div class="map-wrapper">
+                <div id="map" style="height: 450px; width: 100%; border-radius: 10px;"></div>
+            </div>
+        </div>
     </div>
-
-    <script>
-        const locations = [
-            "{{ range .Locations }}",
-            "{{ . }}",
-            "{{ end }}"
-        ];
-    </script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD2AbAIDg-FLpmw_3T_mLCWXr0sP6tnOdU&callback=initMap"
         async defer></script>
     <script>
+        const locations = [
+            "{{ range .Locations }}",
+            "{{ FormatLocation . }}",
+            "{{ end }}"
+        ];
+
         function initMap() {
             const map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 2,
-                center: { lat: 0, lng: 0 },
+                center: { lat: 20, lng: 0 },
                 styles: [
                     {
                         "featureType": "all",
@@ -382,19 +394,36 @@
 
             const geocoder = new google.maps.Geocoder();
 
+            let currentInfoWindow = null;
+
             locations.forEach(location => {
                 geocoder.geocode({ address: location }, (results, status) => {
                     if (status === "OK") {
-                        new google.maps.Marker({
+                        const marker = new google.maps.Marker({
                             map: map,
                             position: results[0].geometry.location,
                             title: location,
+                        });
+
+                        const infoWindow = new google.maps.InfoWindow({
+                            content: `<div style="color: black; font-weight: bold; white-space: nowrap;">${location}</div>`,
+                            pixelOffset: new google.maps.Size(0, -30),
+                            disableAutoPan: true
+                        });
+
+                        marker.addListener('click', () => {
+                            if (currentInfoWindow) {
+                                currentInfoWindow.close();
+                            }
+                            infoWindow.open(map, marker);
+                            currentInfoWindow = infoWindow;
                         });
                     } else {
                         console.error("Geocode was not successful for the following reason: " + status);
                     }
                 });
             });
+
         }
     </script>
 </body>

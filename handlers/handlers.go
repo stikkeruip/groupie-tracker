@@ -43,7 +43,10 @@ var funcMap = template.FuncMap{
 }
 
 // Load the templates with function map
-var templates = template.Must(template.New("").Funcs(funcMap).ParseFiles(filepath.Join("templates", "index.html")))
+var templates = template.Must(template.New("").Funcs(funcMap).ParseFiles(
+	filepath.Join("templates", "index.html"),
+	filepath.Join("templates", "geo.html"),
+))
 
 // IndexHandler renders the homepage with artist data
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
@@ -101,16 +104,17 @@ func GeoHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Prepare the data to pass to the template
 	data := struct {
-		Artist    models.Artist
-		Locations []string
+		Artist         models.Artist
+		Locations      []string
+		FormatLocation func(string) string
 	}{
-		Artist:    artist,
-		Locations: artistLocations,
+		Artist:         artist,
+		Locations:      artistLocations,
+		FormatLocation: FormatLocation,
 	}
 
 	// Render template with fetched data
-	tmpl := template.Must(template.ParseFiles("templates/geo.html"))
-	err = tmpl.Execute(w, data)
+	err = templates.ExecuteTemplate(w, "geo.html", data)
 	if err != nil {
 		http.Error(w, "Failed to render template", http.StatusInternalServerError)
 	}

@@ -136,7 +136,6 @@ h1 {
 }
 
 /* Artist Card Styling with Flip Effect */
-/* Artist Card Styling with Flip Effect */
 .artist-card {
     position: relative;
     /* Ensure the card is positioned relative to its container */
@@ -233,7 +232,7 @@ h1 {
 }
 
 /* Additional Styling for Card Content */
-ul {
+.artist-grid ul {
     list-style-type: none;
     text-align: center;
     width: 100%;
@@ -402,4 +401,42 @@ h1 {
     font-size: 20px;
     font-weight: bold;
     color: #e9d3ff;
+}
+
+.container-map {
+    position: relative;
+    /* Ensure the card is positioned relative to its container */
+    perspective: 1000px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+
+.container-map h1,
+.container-map .artist-image {
+    margin: 15px 0 0 15px;
+}
+
+.map-wrapper {
+    margin: 15px;
+    /* This centers the map wrapper */
+    display: flex;
+    justify-content: center;
+}
+
+.geo-artist-card {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.container-map ul {
+    list-style-type: none;
+    margin: 15px;
+}
+
+.no-text-decoration {
+    text-decoration: none;
 }
