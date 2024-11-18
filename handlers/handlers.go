@@ -71,14 +71,10 @@ func LandingHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // GeoHandler handles the geo page for each artist
+
 func GeoHandler(w http.ResponseWriter, r *http.Request) {
-	// Parse the artist ID from the URL query
-	artistIDStr := r.URL.Query().Get("artistID")
-	artistID, err := strconv.Atoi(artistIDStr)
-	if err != nil {
-		http.Error(w, "Invalid artist ID", http.StatusBadRequest)
-		return
-	}
+	// Get the artist ID from the query parameter
+	artistID := r.URL.Query().Get("artistID")
 
 	// Fetch all data
 	indexes, err := data.FetchAllData()
@@ -87,35 +83,35 @@ func GeoHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Find the artist with the given ID
+	// Find the artist and their locations
 	var artist models.Artist
-	for _, index := range indexes.Artists {
-		if index.ID == artistID {
-			artist = index
+	var artistLocations []string
+	for _, a := range indexes.Artists {
+		if strconv.Itoa(a.ID) == artistID {
+			artist = a
+			break
+		}
+	}
+	for _, loc := range indexes.Locations {
+		if loc.ID == artist.ID {
+			artistLocations = loc.Locations
 			break
 		}
 	}
 
-	// Create a data structure to pass to the template
+	// Prepare the data to pass to the template
 	data := struct {
-		Artist   models.Artist
-		ArtistID int
+		Artist    models.Artist
+		Locations []string
 	}{
-		Artist:   artist,
-		ArtistID: artistID,
+		Artist:    artist,
+		Locations: artistLocations,
 	}
 
-	// Parse the template
-	tmpl, err := template.ParseFiles("templates/geo.html")
-	if err != nil {
-		http.Error(w, "Failed to parse template", http.StatusInternalServerError)
-		return
-	}
-
-	// Render the template with the data
+	// Render template with fetched data
+	tmpl := template.Must(template.ParseFiles("templates/geo.html"))
 	err = tmpl.Execute(w, data)
 	if err != nil {
-		http.Error(w, "Failed to execute template", http.StatusInternalServerError)
-		return
+		http.Error(w, "Failed to render template", http.StatusInternalServerError)
 	}
 }
