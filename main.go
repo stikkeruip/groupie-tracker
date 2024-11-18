@@ -17,6 +17,9 @@ func main() {
 	// Set up the route for the main index page
 	http.HandleFunc("/main", handlers.IndexHandler)
 
+	// Set up the route for the main index page
+	http.HandleFunc("/geo", handlers.GeoHandler)
+
 	// Start the HTTP server on localhost:8080
 	log.Println("Starting server on :8080")
 	if err := http.ListenAndServe("localhost:8080", nil); err != nil {

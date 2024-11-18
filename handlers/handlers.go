@@ -67,3 +67,27 @@ func LandingHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	tmpl.Execute(w, nil)
 }
+
+// GeoHandler handles the geo page for each artist
+func GeoHandler(w http.ResponseWriter, r *http.Request) {
+	// Get the artist ID from the URL
+	artistID := strings.TrimPrefix(r.URL.Path, "/geo/")
+
+	// Pass the artist ID to your template (you may want to fetch artist info from a database or data structure here)
+	// Example: Retrieve artist info based on artistID
+
+	// Prepare the template (geo.html)
+	tmpl, err := template.ParseFiles("templates/geo.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// You can pass artist-specific data here, for example, fetch from your data model
+	// For simplicity, let's pass the artistID in this example
+	tmpl.Execute(w, struct {
+		ArtistID string
+	}{
+		ArtistID: artistID,
+	})
+}

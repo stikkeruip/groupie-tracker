@@ -393,3 +393,13 @@ h1 {
     /* Ensure the progress bar is below the card content */
     margin: 0px 5px 1px 3px;
 }
+
+.map-button {
+    display: inline-block;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #e9d3ff;
+}

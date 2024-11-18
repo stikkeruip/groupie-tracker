@@ -85,6 +85,17 @@ function flipCard(cardElement) {
         const locationsTitle = cardElement.querySelector('.card-locations .category-title');
         const locationsList = cardElement.querySelectorAll('.card-locations li');
         locationsTitle.textContent = locationsList.length === 1 ? 'Location' : 'Locations';
+
+        // Fetch coordinates for the first location
+        if (locationsList.length > 0) {
+            const location = locationsList[0].textContent;
+            fetchCoordinates(location).then(coordinates => {
+                if (coordinates) {
+                    const mapLink = cardElement.querySelector('.map-link');
+                    mapLink.href = `https://www.google.com/maps/search/?api=1&query=${coordinates.lat},${coordinates.lng}`;
+                }
+            });
+        }
     } else if (nextState === 3) {
         console.log(`Flipping ${artistName}'s card to: Dates Section`);
         cardInner.style.transform = "rotateY(540deg)";
@@ -108,6 +119,31 @@ function flipCard(cardElement) {
     }
 }
 
+function fetchCoordinates(location) {
+    return fetch('/api/geocode', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ address: location }),
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'OK') {
+                return {
+                    lat: data.results[0].geometry.location.lat,
+                    lng: data.results[0].geometry.location.lng
+                };
+            } else {
+                console.error('Geocoding failed:', data.status);
+                return null;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching coordinates:', error);
+            return null;
+        });
+}
 
 function debounceSearch() {
     clearTimeout(debounceTimer);

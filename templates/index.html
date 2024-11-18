@@ -51,6 +51,7 @@
                     </div>
                     <div class="card-locations">
                         <h3 class="category-title">Locations</h3>
+                        <a class="map-button" href="/geo?artistID={{ .ID }}">Map</a>
                         <ul>
                             {{ $artistID := .ID }}
                             {{ range $.Locations }}
