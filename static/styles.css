@@ -465,3 +465,13 @@ h1 {
 .no-text-decoration {
     text-decoration: none;
 }
+
+.artist-card:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    /* Lighter background on hover */
+    box-shadow: 0 8px 32px 0 rgba(108, 115, 209, 0.20);
+    /* Add shadow for depth */
+    backdrop-filter: blur(8px);
+    /* Increase blur on hover */
+    -webkit-backdrop-filter: blur(8px);
+}
