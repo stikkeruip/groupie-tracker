@@ -251,3 +251,16 @@ document.addEventListener('click', function (event) {
 document.getElementById('searchSuggestions').addEventListener('click', function (event) {
     event.stopPropagation();
 });
+
+function flipAllCards() {
+    const cards = document.querySelectorAll(".artist-card");
+    cards.forEach(card => flipCard(card));
+}
+
+// Add this event listener to handle the keyboard shortcut
+document.addEventListener('keydown', function (event) {
+    // Check if the pressed key is 'F' (you can change this to any key you prefer)
+    if (event.key === 'f' || event.key === 'F') {
+        flipAllCards();
+    }
+});
