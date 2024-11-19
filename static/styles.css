@@ -475,3 +475,168 @@ h1 {
     /* Increase blur on hover */
     -webkit-backdrop-filter: blur(8px);
 }
+
+/* Filter Styles */
+#filterOptions {
+    display: none;
+    background: rgba(102, 126, 234, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(31, 38, 135, 0.4);
+    z-index: 1000;
+    max-width: 400px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: absolute;
+    color: #ffffff;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -48%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+#filterOptions h3 {
+    color: #fff;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.locations-dropdown {
+    position: relative;
+}
+
+.locations-dropdown-toggle {
+    width: 100%;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    color: #fff;
+    font-size: 1em;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.3s ease;
+}
+
+.locations-dropdown-toggle:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+#locationCheckboxes {
+    display: none;
+    max-height: 200px;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+#locationCheckboxes label {
+    display: block;
+    padding: 8px 10px;
+    color: #333;
+    transition: background-color 0.2s ease;
+}
+
+#locationCheckboxes label:hover {
+    background-color: rgba(102, 126, 234, 0.1);
+}
+
+#locationCheckboxes input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.styled-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.styled-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#filterToggleBtn {
+    display: inline-block;
+    margin-bottom: 15px;
+    margin-left: 50px;
+    padding: 10px 20px;
+    background: #ffffff;
+    border: none;
+    border-radius: 30px;
+    color: #667eea;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#clearFilters {
+    display: inline-block;
+    margin-bottom: 15px;
+    padding: 10px 20px;
+    background: #ffffff;
+    border: none;
+    border-radius: 30px;
+    color: #667eea;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#filterToggleBtn:hover,
+#clearFilters:hover {
+    background: #667eea;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.filter-section {
+    margin-bottom: 20px;
+}
+
+.filter-section h3 {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+#memberCheckboxes {
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    color: #fff;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+
+#memberCheckboxes label,
+#locationCheckboxes label {
+    padding: 5px;
+    margin-right: 10px;
+    display: inline-block;
+}

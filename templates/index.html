@@ -25,6 +25,26 @@
             <div id="searchSuggestions" class="search-suggestions"></div>
         </div>
 
+        <!-- Filter Section -->
+        <button id="filterToggleBtn" class="styled-button">Filter Options</button>
+        <button id="clearFilters" class="styled-button">Clear Filters</button>
+        <div id="filterOptions" style="display: none;">
+            <div class="filter-section">
+                <h3>Creation Date</h3>
+                <input type="number" id="creationDateMin" placeholder="Min Year">
+                <input type="number" id="creationDateMax" placeholder="Max Year">
+            </div>
+            <div class="filter-section">
+                <h3>First Album Date</h3>
+                <input type="number" id="firstAlbumDateMin" placeholder="Min Year">
+                <input type="number" id="firstAlbumDateMax" placeholder="Max Year">
+            </div>
+            <div class="filter-section">
+                <h3>Number of Members</h3>
+                <div id="memberCheckboxes"></div>
+            </div>
+        </div>
+
         <!-- Artist Cards Grid -->
         <div class="artist-grid">
             {{ range .Artists }}

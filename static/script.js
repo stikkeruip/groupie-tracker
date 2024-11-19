@@ -264,3 +264,102 @@ document.addEventListener('keydown', function (event) {
         flipAllCards();
     }
 });
+
+/* filter shit */
+
+document.addEventListener('DOMContentLoaded', function () {
+    const filterToggleBtn = document.getElementById('filterToggleBtn');
+    const filterOptions = document.getElementById('filterOptions');
+    const clearFiltersBtn = document.getElementById('clearFilters');
+    const artistCards = document.querySelectorAll('.artist-card');
+
+    // Toggle filter options visibility
+    filterToggleBtn.addEventListener('click', function () {
+        filterOptions.style.display = filterOptions.style.display === 'none' ? 'block' : 'none';
+    });
+
+    // Clear all filters
+    clearFiltersBtn.addEventListener('click', function () {
+        document.getElementById('creationDateMin').value = '';
+        document.getElementById('creationDateMax').value = '';
+        document.getElementById('firstAlbumDateMin').value = '';
+        document.getElementById('firstAlbumDateMax').value = '';
+        document.querySelectorAll('#memberCheckboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
+        filterArtists();
+    });
+
+    // Filter artists based on criteria
+    function filterArtists() {
+        const creationDateMin = parseInt(document.getElementById('creationDateMin').value) || 0;
+        const creationDateMax = parseInt(document.getElementById('creationDateMax').value) || 9999;
+        const firstAlbumDateMin = parseInt(document.getElementById('firstAlbumDateMin').value) || 0;
+        const firstAlbumDateMax = parseInt(document.getElementById('firstAlbumDateMax').value) || 9999;
+        const selectedMembers = Array.from(document.querySelectorAll('#memberCheckboxes input[type="checkbox"]:checked')).map(cb => parseInt(cb.value));
+
+        artistCards.forEach(card => {
+            const creationDate = parseInt(card.querySelector('.artist-info p:nth-child(1) strong').textContent);
+            const firstAlbumDateFull = card.querySelector('.artist-info p:nth-child(2) strong').textContent;
+            const firstAlbumDate = parseInt(firstAlbumDateFull.split('-')[2]); // Extract year from DD-MM-YYYY format
+            const membersCount = parseInt(card.querySelector('.artist-info p:nth-child(3) strong').textContent);
+
+            const matchesCreationDate = creationDate >= creationDateMin && creationDate <= creationDateMax;
+            const matchesFirstAlbumDate = firstAlbumDate >= firstAlbumDateMin && firstAlbumDate <= firstAlbumDateMax;
+            const matchesMembers = selectedMembers.length === 0 || selectedMembers.includes(membersCount);
+
+            if (matchesCreationDate && matchesFirstAlbumDate && matchesMembers) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    // Add event listeners to filter inputs
+    document.getElementById('creationDateMin').addEventListener('input', filterArtists);
+    document.getElementById('creationDateMax').addEventListener('input', filterArtists);
+    document.getElementById('firstAlbumDateMin').addEventListener('input', filterArtists);
+    document.getElementById('firstAlbumDateMax').addEventListener('input', filterArtists);
+
+    // Populate member checkboxes
+    const memberCounts = [...new Set(Array.from(artistCards).map(card => parseInt(card.querySelector('.artist-info p:nth-child(3) strong').textContent)))].sort((a, b) => a - b);
+    const memberCheckboxes = document.getElementById('memberCheckboxes');
+    memberCounts.forEach(count => {
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = `member-${count}`;
+        checkbox.value = count;
+        checkbox.addEventListener('change', filterArtists);
+
+        const label = document.createElement('label');
+        label.htmlFor = `member-${count}`;
+        label.textContent = count;
+
+        memberCheckboxes.appendChild(checkbox);
+        memberCheckboxes.appendChild(label);
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const filterOptions = document.getElementById('filterOptions');
+    const filterToggleBtn = document.getElementById('filterToggleBtn');
+
+    // Function to close the filter options
+    function closeFilterOptions(event) {
+        if (!filterOptions.contains(event.target) && event.target !== filterToggleBtn) {
+            filterOptions.style.display = 'none';
+        }
+    }
+
+    // Add click event listener to the document
+    document.addEventListener('click', closeFilterOptions);
+
+    // Prevent the click on filter options from closing itself
+    filterOptions.addEventListener('click', function (event) {
+        event.stopPropagation();
+    });
+
+    // Prevent the click on filter toggle button from being caught by the document listener
+    filterToggleBtn.addEventListener('click', function (event) {
+        event.stopPropagation();
+    });
+});
