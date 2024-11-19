@@ -31,17 +31,36 @@
         <div id="filterOptions" style="display: none;">
             <div class="filter-section">
                 <h3>Creation Date</h3>
-                <input type="number" id="creationDateMin" placeholder="Min Year">
-                <input type="number" id="creationDateMax" placeholder="Max Year">
+                <div class="range-slider">
+                    <input type="range" id="creationDateMin" min="1958" max="2015" value="1958">
+                    <input type="range" id="creationDateMax" min="1958" max="2015" value="2015">
+                </div>
+                <div class="range-values">
+                    <span id="creationDateMinValue">1958</span>
+                    <span id="creationDateMaxValue">2015</span>
+                </div>
             </div>
             <div class="filter-section">
                 <h3>First Album Date</h3>
-                <input type="number" id="firstAlbumDateMin" placeholder="Min Year">
-                <input type="number" id="firstAlbumDateMax" placeholder="Max Year">
+                <div class="range-slider">
+                    <input type="range" id="firstAlbumDateMin" min="1963" max="2018" value="1963">
+                    <input type="range" id="firstAlbumDateMax" min="1963" max="2018" value="2018">
+                </div>
+                <div class="range-values">
+                    <span id="firstAlbumDateMinValue">1963</span>
+                    <span id="firstAlbumDateMaxValue">2018</span>
+                </div>
             </div>
             <div class="filter-section">
                 <h3>Number of Members</h3>
                 <div id="memberCheckboxes"></div>
+            </div>
+            <div class="filter-section">
+                <h3>Countries</h3>
+                <div class="countries-dropdown">
+                    <button class="countries-dropdown-toggle">Select Countries</button>
+                    <div id="countryCheckboxes"></div>
+                </div>
             </div>
         </div>
 

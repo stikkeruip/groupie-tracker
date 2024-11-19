@@ -2,6 +2,25 @@ const cardStates = new Map();
 let debounceTimer;
 
 document.addEventListener("DOMContentLoaded", () => {
+
+    // New code for setting up date ranges
+    const creationDates = Array.from(document.querySelectorAll('.artist-card .artist-info p:nth-child(1) strong')).map(el => parseInt(el.textContent));
+    const firstAlbumDates = Array.from(document.querySelectorAll('.artist-card .artist-info p:nth-child(2) strong')).map(el => parseInt(el.textContent.split('-')[2]));
+
+    const minCreationDate = Math.min(...creationDates);
+    const maxCreationDate = Math.max(...creationDates);
+    const minFirstAlbumDate = Math.min(...firstAlbumDates);
+    const maxFirstAlbumDate = Math.max(...firstAlbumDates);
+
+    document.getElementById('creationDateMin').min = minCreationDate;
+    document.getElementById('creationDateMin').max = maxCreationDate;
+    document.getElementById('creationDateMax').min = minCreationDate;
+    document.getElementById('creationDateMax').max = maxCreationDate;
+
+    document.getElementById('firstAlbumDateMin').min = minFirstAlbumDate;
+    document.getElementById('firstAlbumDateMin').max = maxFirstAlbumDate;
+    document.getElementById('firstAlbumDateMax').min = minFirstAlbumDate;
+    document.getElementById('firstAlbumDateMax').max = maxFirstAlbumDate;
     const cards = document.querySelectorAll(".artist-card");
     cards.forEach((card, index) => {
         // Initialize each card's state to 0 (front face)
@@ -29,6 +48,128 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const searchInput = document.getElementById('searchInput');
     searchInput.addEventListener('input', debounceSearch);
+
+    /* from filter shit */
+    const filterToggleBtn = document.getElementById('filterToggleBtn');
+    const filterOptions = document.getElementById('filterOptions');
+    const clearFiltersBtn = document.getElementById('clearFilters');
+    const artistCards = document.querySelectorAll('.artist-card');
+
+    // Toggle filter options visibility
+    filterToggleBtn.addEventListener('click', function () {
+        filterOptions.style.display = filterOptions.style.display === 'none' ? 'block' : 'none';
+    });
+
+    // Clear all filters
+    clearFiltersBtn.addEventListener('click', function () {
+        document.getElementById('creationDateMin').value = '';
+        document.getElementById('creationDateMax').value = '';
+        document.getElementById('firstAlbumDateMin').value = '';
+        document.getElementById('firstAlbumDateMax').value = '';
+        document.querySelectorAll('#memberCheckboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
+        filterArtists();
+    });
+
+    // Filter artists based on criteria
+    function filterArtists() {
+        const creationDateMin = parseInt(document.getElementById('creationDateMin').value);
+        const creationDateMax = parseInt(document.getElementById('creationDateMax').value);
+        const firstAlbumDateMin = parseInt(document.getElementById('firstAlbumDateMin').value);
+        const firstAlbumDateMax = parseInt(document.getElementById('firstAlbumDateMax').value);
+        const selectedMembers = Array.from(document.querySelectorAll('#memberCheckboxes input[type="checkbox"]:checked')).map(cb => parseInt(cb.value));
+
+        artistCards.forEach(card => {
+            const creationDate = parseInt(card.querySelector('.artist-info p:nth-child(1) strong').textContent);
+            const firstAlbumDateFull = card.querySelector('.artist-info p:nth-child(2) strong').textContent;
+            const firstAlbumDate = parseInt(firstAlbumDateFull.split('-')[2]); // Extract year from DD-MM-YYYY format
+            const membersCount = parseInt(card.querySelector('.artist-info p:nth-child(3) strong').textContent);
+
+            const matchesCreationDate = creationDate >= creationDateMin && creationDate <= creationDateMax;
+            const matchesFirstAlbumDate = firstAlbumDate >= firstAlbumDateMin && firstAlbumDate <= firstAlbumDateMax;
+            const matchesMembers = selectedMembers.length === 0 || selectedMembers.includes(membersCount);
+
+            if (matchesCreationDate && matchesFirstAlbumDate && matchesMembers) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+
+    // Populate member checkboxes
+    const memberCounts = [...new Set(Array.from(artistCards).map(card => parseInt(card.querySelector('.artist-info p:nth-child(3) strong').textContent)))].sort((a, b) => a - b);
+    const memberCheckboxes = document.getElementById('memberCheckboxes');
+    memberCounts.forEach((count, index) => {
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = `member-${count}`;
+        checkbox.value = count;
+        checkbox.addEventListener('change', filterArtists);
+
+        const label = document.createElement('label');
+        label.htmlFor = `member-${count}`;
+        label.textContent = count;
+
+        // Remove padding from the 8th (last) checkbox label
+        if (index === memberCounts.length - 1) {
+            label.style.margin = '0';
+        }
+
+        memberCheckboxes.appendChild(checkbox);
+        memberCheckboxes.appendChild(label);
+    });
+    // Setup range sliders
+    setupRangeSlider('creationDate', 1958, 2015);
+    setupRangeSlider('firstAlbumDate', 1963, 2018);
+
+    function setupRangeSlider(id, min, max) {
+        const minSlider = document.getElementById(`${id}Min`);
+        const maxSlider = document.getElementById(`${id}Max`);
+        const minValue = document.getElementById(`${id}MinValue`);
+        const maxValue = document.getElementById(`${id}MaxValue`);
+
+        minSlider.addEventListener('input', function () {
+            const minVal = parseInt(minSlider.value);
+            const maxVal = parseInt(maxSlider.value);
+
+            if (minVal > maxVal) {
+                minSlider.value = maxVal;
+            }
+            minValue.textContent = minSlider.value;
+            filterArtists();
+        });
+
+        maxSlider.addEventListener('input', function () {
+            const minVal = parseInt(minSlider.value);
+            const maxVal = parseInt(maxSlider.value);
+
+            if (maxVal < minVal) {
+                maxSlider.value = minVal;
+            }
+            maxValue.textContent = maxSlider.value;
+            filterArtists();
+        });
+    }
+
+    // Function to close the filter options
+    function closeFilterOptions(event) {
+        if (!filterOptions.contains(event.target) && event.target !== filterToggleBtn) {
+            filterOptions.style.display = 'none';
+        }
+    }
+
+    // Add click event listener to the document
+    document.addEventListener('click', closeFilterOptions);
+    // Prevent the click on filter options from closing itself
+    filterOptions.addEventListener('click', function (event) {
+        event.stopPropagation();
+    });
+
+    // Prevent the click on filter toggle button from being caught by the document listener
+    filterToggleBtn.addEventListener('click', function (event) {
+        event.stopPropagation();
+    });
 });
 
 function flipCard(cardElement) {
@@ -119,7 +260,7 @@ function flipCard(cardElement) {
     }
 }
 
-function fetchCoordinates(location) {
+async function fetchCoordinates(location) {
     return fetch('/api/geocode', {
         method: 'POST',
         headers: {
@@ -267,99 +408,15 @@ document.addEventListener('keydown', function (event) {
 
 /* filter shit */
 
-document.addEventListener('DOMContentLoaded', function () {
-    const filterToggleBtn = document.getElementById('filterToggleBtn');
-    const filterOptions = document.getElementById('filterOptions');
-    const clearFiltersBtn = document.getElementById('clearFilters');
-    const artistCards = document.querySelectorAll('.artist-card');
-
-    // Toggle filter options visibility
-    filterToggleBtn.addEventListener('click', function () {
-        filterOptions.style.display = filterOptions.style.display === 'none' ? 'block' : 'none';
-    });
-
-    // Clear all filters
-    clearFiltersBtn.addEventListener('click', function () {
-        document.getElementById('creationDateMin').value = '';
-        document.getElementById('creationDateMax').value = '';
-        document.getElementById('firstAlbumDateMin').value = '';
-        document.getElementById('firstAlbumDateMax').value = '';
-        document.querySelectorAll('#memberCheckboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
-        filterArtists();
-    });
-
-    // Filter artists based on criteria
-    function filterArtists() {
-        const creationDateMin = parseInt(document.getElementById('creationDateMin').value) || 0;
-        const creationDateMax = parseInt(document.getElementById('creationDateMax').value) || 9999;
-        const firstAlbumDateMin = parseInt(document.getElementById('firstAlbumDateMin').value) || 0;
-        const firstAlbumDateMax = parseInt(document.getElementById('firstAlbumDateMax').value) || 9999;
-        const selectedMembers = Array.from(document.querySelectorAll('#memberCheckboxes input[type="checkbox"]:checked')).map(cb => parseInt(cb.value));
-
-        artistCards.forEach(card => {
-            const creationDate = parseInt(card.querySelector('.artist-info p:nth-child(1) strong').textContent);
-            const firstAlbumDateFull = card.querySelector('.artist-info p:nth-child(2) strong').textContent;
-            const firstAlbumDate = parseInt(firstAlbumDateFull.split('-')[2]); // Extract year from DD-MM-YYYY format
-            const membersCount = parseInt(card.querySelector('.artist-info p:nth-child(3) strong').textContent);
-
-            const matchesCreationDate = creationDate >= creationDateMin && creationDate <= creationDateMax;
-            const matchesFirstAlbumDate = firstAlbumDate >= firstAlbumDateMin && firstAlbumDate <= firstAlbumDateMax;
-            const matchesMembers = selectedMembers.length === 0 || selectedMembers.includes(membersCount);
-
-            if (matchesCreationDate && matchesFirstAlbumDate && matchesMembers) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
+// Add this function to extract unique countries from locations
+function getUniqueCountries(artists) {
+    const countries = new Set();
+    artists.forEach(artist => {
+        const locations = artist.querySelector('.card-locations ul').querySelectorAll('li');
+        locations.forEach(location => {
+            const country = location.textContent.split('-').pop().trim();
+            countries.add(country);
         });
-    }
-
-    // Add event listeners to filter inputs
-    document.getElementById('creationDateMin').addEventListener('input', filterArtists);
-    document.getElementById('creationDateMax').addEventListener('input', filterArtists);
-    document.getElementById('firstAlbumDateMin').addEventListener('input', filterArtists);
-    document.getElementById('firstAlbumDateMax').addEventListener('input', filterArtists);
-
-    // Populate member checkboxes
-    const memberCounts = [...new Set(Array.from(artistCards).map(card => parseInt(card.querySelector('.artist-info p:nth-child(3) strong').textContent)))].sort((a, b) => a - b);
-    const memberCheckboxes = document.getElementById('memberCheckboxes');
-    memberCounts.forEach(count => {
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.id = `member-${count}`;
-        checkbox.value = count;
-        checkbox.addEventListener('change', filterArtists);
-
-        const label = document.createElement('label');
-        label.htmlFor = `member-${count}`;
-        label.textContent = count;
-
-        memberCheckboxes.appendChild(checkbox);
-        memberCheckboxes.appendChild(label);
     });
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-    const filterOptions = document.getElementById('filterOptions');
-    const filterToggleBtn = document.getElementById('filterToggleBtn');
-
-    // Function to close the filter options
-    function closeFilterOptions(event) {
-        if (!filterOptions.contains(event.target) && event.target !== filterToggleBtn) {
-            filterOptions.style.display = 'none';
-        }
-    }
-
-    // Add click event listener to the document
-    document.addEventListener('click', closeFilterOptions);
-
-    // Prevent the click on filter options from closing itself
-    filterOptions.addEventListener('click', function (event) {
-        event.stopPropagation();
-    });
-
-    // Prevent the click on filter toggle button from being caught by the document listener
-    filterToggleBtn.addEventListener('click', function (event) {
-        event.stopPropagation();
-    });
-});
+    return Array.from(countries).sort();
+}
