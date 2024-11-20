@@ -62,11 +62,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Clear all filters
     clearFiltersBtn.addEventListener('click', function () {
-        document.getElementById('creationDateMin').value = '';
-        document.getElementById('creationDateMax').value = '';
-        document.getElementById('firstAlbumDateMin').value = '';
-        document.getElementById('firstAlbumDateMax').value = '';
+        // Reset range sliders to their initial values
+        document.getElementById('creationDateMin').value = document.getElementById('creationDateMin').min;
+        document.getElementById('creationDateMax').value = document.getElementById('creationDateMax').max;
+        document.getElementById('firstAlbumDateMin').value = document.getElementById('firstAlbumDateMin').min;
+        document.getElementById('firstAlbumDateMax').value = document.getElementById('firstAlbumDateMax').max;
+
+        // Update the displayed values
+        document.getElementById('creationDateMinValue').textContent = document.getElementById('creationDateMin').min;
+        document.getElementById('creationDateMaxValue').textContent = document.getElementById('creationDateMax').max;
+        document.getElementById('firstAlbumDateMinValue').textContent = document.getElementById('firstAlbumDateMin').min;
+        document.getElementById('firstAlbumDateMaxValue').textContent = document.getElementById('firstAlbumDateMax').max;
+
+        // Uncheck all checkboxes
         document.querySelectorAll('#memberCheckboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
+        document.querySelectorAll('#countryCheckboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
+
+        // Show all artist cards
+        document.querySelectorAll('.artist-card').forEach(card => {
+            card.style.display = 'block';
+        });
+
+        // Optionally, you can call filterArtists() here if you want to apply any default filtering
         filterArtists();
     });
 
@@ -77,6 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const firstAlbumDateMin = parseInt(document.getElementById('firstAlbumDateMin').value);
         const firstAlbumDateMax = parseInt(document.getElementById('firstAlbumDateMax').value);
         const selectedMembers = Array.from(document.querySelectorAll('#memberCheckboxes input[type="checkbox"]:checked')).map(cb => parseInt(cb.value));
+        const selectedCountries = Array.from(document.querySelectorAll('#countryCheckboxes input[type="checkbox"]:checked')).map(cb => cb.value.toLowerCase());
 
         artistCards.forEach(card => {
             const creationDate = parseInt(card.querySelector('.artist-info p:nth-child(1) strong').textContent);
@@ -84,11 +102,16 @@ document.addEventListener("DOMContentLoaded", () => {
             const firstAlbumDate = parseInt(firstAlbumDateFull.split('-')[2]); // Extract year from DD-MM-YYYY format
             const membersCount = parseInt(card.querySelector('.artist-info p:nth-child(3) strong').textContent);
 
+            // Get countries for this artist
+            const artistCountries = Array.from(card.querySelectorAll('.card-locations ul li'))
+                .map(li => li.textContent.split(', ').pop().trim().toLowerCase());
+
             const matchesCreationDate = creationDate >= creationDateMin && creationDate <= creationDateMax;
             const matchesFirstAlbumDate = firstAlbumDate >= firstAlbumDateMin && firstAlbumDate <= firstAlbumDateMax;
             const matchesMembers = selectedMembers.length === 0 || selectedMembers.includes(membersCount);
+            const matchesCountries = selectedCountries.length === 0 || artistCountries.some(country => selectedCountries.includes(country));
 
-            if (matchesCreationDate && matchesFirstAlbumDate && matchesMembers) {
+            if (matchesCreationDate && matchesFirstAlbumDate && matchesMembers && matchesCountries) {
                 card.style.display = 'block';
             } else {
                 card.style.display = 'none';
