@@ -74,27 +74,6 @@ func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, "404 - Page not found", http.StatusNotFound)
 }
 
-// GeocodeHandler handles the geocoding API requests
-func GeocodeHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
-	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
-
-	if r.Method == "OPTIONS" {
-		w.WriteHeader(http.StatusOK)
-		return
-	}
-
-	address := r.URL.Query().Get("address")
-	if address == "" {
-		log.Print("No address provided for geocoding")
-		http.Error(w, "Address parameter is required", http.StatusBadRequest)
-		return
-	}
-
-	log.Printf("Successfully geocoded address: %s", address)
-}
-
 // IndexHandler renders the homepage with artist data
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	indexes, err := data.FetchAllData()
