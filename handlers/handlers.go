@@ -71,7 +71,21 @@ var templates = template.Must(template.New("").Funcs(funcMap).ParseFiles(
 // NotFoundHandler handles 404 errors
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 	log.Printf("404 Not Found - Path: %s", r.URL.Path)
-	http.Error(w, "404 - Page not found", http.StatusNotFound)
+
+	tmpl, err := template.ParseFiles("templates/404.html")
+	if err != nil {
+		log.Printf("Template parsing error: %v", err)
+		http.Error(w, "404 - Page not found", http.StatusNotFound)
+		return
+	}
+
+	w.WriteHeader(http.StatusNotFound)
+	err = tmpl.Execute(w, nil)
+	if err != nil {
+		log.Printf("Template execution error: %v", err)
+		http.Error(w, "404 - Page not found", http.StatusNotFound)
+		return
+	}
 }
 
 // IndexHandler renders the homepage with artist data
