@@ -414,9 +414,71 @@ function getUniqueCountries(artists) {
     artists.forEach(artist => {
         const locations = artist.querySelector('.card-locations ul').querySelectorAll('li');
         locations.forEach(location => {
-            const country = location.textContent.split('-').pop().trim();
-            countries.add(country);
+            const locationText = location.textContent.trim();
+            const parts = locationText.split(', ');
+            if (parts.length > 1) {
+                const country = parts[parts.length - 1].trim();
+                countries.add(country);
+            }
         });
     });
     return Array.from(countries).sort();
+}
+document.addEventListener('DOMContentLoaded', function () {
+    const dropdownToggle = document.getElementById('countriesDropdownToggle');
+    const countryCheckboxes = document.getElementById('countryCheckboxes');
+
+    // Toggle dropdown when clicking the button
+    dropdownToggle.addEventListener('click', function () {
+        if (countryCheckboxes.style.display === 'none' || countryCheckboxes.style.display === '') {
+            countryCheckboxes.style.display = 'block';
+        } else {
+            countryCheckboxes.style.display = 'none';
+        }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function (event) {
+        if (!dropdownToggle.contains(event.target) && !countryCheckboxes.contains(event.target)) {
+            countryCheckboxes.style.display = 'none';
+        }
+    });
+
+    // Populate country checkboxes (assuming you have a list of countries)
+    const countries = getUniqueCountries(document.querySelectorAll('.artist-card'));
+    countries.forEach(country => {
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = `country-${country}`;
+        checkbox.value = country;
+
+        const label = document.createElement('label');
+        label.htmlFor = `country-${country}`;
+        label.textContent = country;
+
+        const div = document.createElement('div');
+        div.appendChild(checkbox);
+        div.appendChild(label);
+
+        countryCheckboxes.appendChild(div);
+    });
+
+    // Add event listener for country checkboxes
+    countryCheckboxes.addEventListener('change', filterArtistsByCountry);
+});
+
+function filterArtistsByCountry() {
+    const selectedCountries = Array.from(document.querySelectorAll('#countryCheckboxes input:checked')).map(cb => cb.value);
+    const artistCards = document.querySelectorAll('.artist-card');
+
+    artistCards.forEach(card => {
+        const locations = card.querySelectorAll('.card-locations li');
+        const artistCountries = Array.from(locations).map(location => {
+            const parts = location.textContent.trim().split(', ');
+            return parts[parts.length - 1].trim();
+        });
+
+        const shouldShow = selectedCountries.length === 0 || artistCountries.some(country => selectedCountries.includes(country));
+        card.style.display = shouldShow ? '' : 'none';
+    });
 }

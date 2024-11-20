@@ -673,38 +673,32 @@ h1 {
     background: rgba(255, 255, 255, 0.2);
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 5px;
-    color: #fff;
+    color: #ffffff;
     font-size: 1em;
     cursor: pointer;
     text-align: left;
     transition: background-color 0.3s ease;
 }
 
-.countries-dropdown-toggle:hover {
-    background: rgba(255, 255, 255, 0.3);
-}
-
 #countryCheckboxes {
     display: none;
+    position: relative;
+    width: 100%;
     max-height: 200px;
     overflow-y: auto;
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 5px;
     margin-top: 5px;
+    z-index: 1000;
+    color: #667eea;
+}
+
+#countryCheckboxes div {
+    padding: 5px 10px;
 }
 
 #countryCheckboxes label {
-    display: block;
-    padding: 8px 10px;
-    color: #333;
-    transition: background-color 0.2s ease;
-}
-
-#countryCheckboxes label:hover {
-    background-color: rgba(102, 126, 234, 0.1);
-}
-
-#countryCheckboxes input[type="checkbox"] {
-    margin-right: 8px;
+    margin-left: 5px;
+    cursor: pointer;
 }
