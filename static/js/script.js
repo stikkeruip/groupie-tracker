@@ -116,32 +116,6 @@ function flipCard(cardElement) {
     }
 }
 
-async function fetchCoordinates(location) {
-    return fetch('/api/geocode', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ address: location }),
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'OK') {
-                return {
-                    lat: data.results[0].geometry.location.lat,
-                    lng: data.results[0].geometry.location.lng
-                };
-            } else {
-                console.error('Geocoding failed:', data.status);
-                return null;
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching coordinates:', error);
-            return null;
-        });
-}
-
 function flipAllCards() {
     const cards = document.querySelectorAll(".artist-card");
     cards.forEach(card => flipCard(card));
