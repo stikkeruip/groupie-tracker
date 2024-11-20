@@ -83,16 +83,6 @@ function flipCard(cardElement) {
         const locationsList = cardElement.querySelectorAll('.card-locations li');
         locationsTitle.textContent = locationsList.length === 1 ? 'Location' : 'Locations';
 
-        // Fetch coordinates for the first location
-        if (locationsList.length > 0) {
-            const location = locationsList[0].textContent;
-            fetchCoordinates(location).then(coordinates => {
-                if (coordinates) {
-                    const mapLink = cardElement.querySelector('.map-link');
-                    mapLink.href = `https://www.google.com/maps/search/?api=1&query=${coordinates.lat},${coordinates.lng}`;
-                }
-            });
-        }
     } else if (nextState === 3) {
         console.log(`Flipping ${artistName}'s card to: Dates Section`);
         cardInner.style.transform = "rotateY(540deg)";

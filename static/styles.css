@@ -702,3 +702,17 @@ h1 {
     margin-left: 5px;
     cursor: pointer;
 }
+
+.return-link {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #7950f2;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.return-link:hover {
+    background-color: #5f3dc4;
+}
